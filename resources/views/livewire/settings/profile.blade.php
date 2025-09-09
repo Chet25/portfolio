@@ -95,6 +95,12 @@ new class extends Component {
                             </flux:text>
                         @endif
                     </div>
+                @else
+                    <div>
+                        <flux:text class="mt-4 !dark:text-green-400 !text-green-600">
+                            {{ __('Your email address is verified.') }}
+                        </flux:text>
+                    </div>
                 @endif
             </div>
 
