@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\SwitchAccountController;
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 
@@ -19,4 +20,13 @@ Route::middleware(['auth'])->group(function () {
     Volt::route('settings/appearance', 'settings.appearance')->name('settings.appearance');
 });
 
-require __DIR__.'/auth.php';
+Route::middleware(['auth'])->group(function () {
+    Route::get('/switch-account', [SwitchAccountController::class, "index"])->name("switch_account");
+    Route::post('/switch-account', [SwitchAccountController::class, "switch"])->name("switch_account.switch");
+    Route::post('/logout-current', [SwitchAccountController::class, "logout"])->name("switch_account.logout");
+
+    Route::get('/auth/add-account', [\App\Http\Controllers\Auth\AddAccountController::class, 'create'])->name('auth.add_account');
+    Route::post('/auth/add-account', [\App\Http\Controllers\Auth\AddAccountController::class, 'store'])->name('auth.add_account.store');
+});
+
+require __DIR__ . '/auth.php';
