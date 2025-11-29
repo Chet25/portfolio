@@ -17,6 +17,12 @@
             <flux:navlist.group :heading="__('Navigation')" class="grid">
                 <flux:navlist.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')"
                     wire:navigate>{{ __('Home') }}</flux:navlist.item>
+                
+                <flux:navlist.item icon="document-text" :href="route('dashboard.my-blogs.index')" 
+                    :current="request()->routeIs('dashboard.my-blogs.*')" wire:navigate>
+                    {{ __('My Blogs') }}
+                </flux:navlist.item>
+
                 {{-- admin panel route --}}
                 @role(['super_admin', 'admin'])
                 <flux:navlist.item icon="cog-6-tooth" :href="route('filament.admin.pages.dashboard')"

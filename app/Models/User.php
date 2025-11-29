@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -10,10 +12,15 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable implements MustVerifyEmail
+class User extends Authenticatable implements MustVerifyEmail, FilamentUser
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, HasRoles;
+
+    public function canAccessPanel(Panel $panel): bool
+    {
+        return $this->hasRole(['super_admin', 'admin']);
+    }
 
     /**
      * The attributes that are mass assignable.
@@ -62,9 +69,17 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Get the blogs for the user.
+     * Get the blogs for the user (Author).
      */
     public function blogs(): HasMany
+    {
+        return $this->hasMany(Blog::class, 'user_id');
+    }
+
+    /**
+     * Get the blogs reviewed by the user (Editor).
+     */
+    public function editedBlogs(): HasMany
     {
         return $this->hasMany(Blog::class, 'editor_id');
     }

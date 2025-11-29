@@ -65,6 +65,10 @@ class AdminPanelProvider extends PanelProvider
                     ->icon('heroicon-o-globe-alt')
                     ->url('/dashboard')
                     ->isActiveWhen(fn() => request()->routeIs('dashboard')),
+                NavigationItem::make('Switch Account')
+                    ->icon('heroicon-o-arrows-right-left')
+                    ->url('/switch-account')
+                    ->isActiveWhen(fn() => request()->routeIs('switch-account')),
             ]);
     }
 }
