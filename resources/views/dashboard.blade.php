@@ -13,13 +13,10 @@
             </div>
 
             {{-- Theme Toggle --}}
-            <div x-data="{darkTheme: false}"
-                x-init="$watch('darkTheme', v => {$flux.appearance = v ? 'dark' : 'light'})"
-                class="flex items-center gap-2">
-                <flux:field variant="inline">
-                    <flux:label>{{ __('Dark Mode') }}</flux:label>
-                    <flux:switch x-model="darkTheme" />
-                </flux:field>
+            <div class="flex items-center gap-2" x-data>
+                <flux:button x-show="$flux.appearance === 'light'" x-on:click="$flux.appearance = 'dark'" icon="sun" variant="ghost" class="text-zinc-500 dark:text-zinc-400" />
+                <flux:button x-show="$flux.appearance === 'dark'" x-on:click="$flux.appearance = 'system'" icon="moon" variant="ghost" class="text-zinc-500 dark:text-zinc-400" />
+                <flux:button x-show="$flux.appearance === 'system'" x-on:click="$flux.appearance = 'light'" icon="computer-desktop" variant="ghost" class="text-zinc-500 dark:text-zinc-400" />
             </div>
         </div>
 
