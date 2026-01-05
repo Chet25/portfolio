@@ -32,8 +32,15 @@ class EditorUploadController extends Controller
         $url = $request->input('url');
 
         try {
-            $html = @file_get_contents($url);
-            
+            // Use Laravel's HTTP client for safety and better performance
+            $response = \Illuminate\Support\Facades\Http::timeout(5)->get($url);
+
+            if ($response->failed()) {
+                return response()->json(['success' => 0]);
+            }
+
+            $html = $response->body();
+
             if (!$html) {
                 return response()->json(['success' => 0]);
             }

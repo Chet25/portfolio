@@ -18,7 +18,7 @@ new #[Layout('components.layouts.app')] class extends Component {
     #[Validate('required')]
     public string $content = '';
     
-    #[Validate('nullable|image|max:2048')]
+    #[Validate('nullable|image|max:5120')]
     public $featured_image;
 
     public ?string $existing_image_url = null;
@@ -28,9 +28,7 @@ new #[Layout('components.layouts.app')] class extends Component {
 
     public function mount(Blog $blog)
     {
-        if ($blog->user_id !== Auth::id()) {
-            abort(403);
-        }
+        $this->authorize('update', $blog);
 
         $this->blog = $blog;
         $this->title = $blog->title;
@@ -108,7 +106,7 @@ new #[Layout('components.layouts.app')] class extends Component {
             {{-- Featured Image --}}
             <flux:field>
                 <flux:label>Featured Image</flux:label>
-                <flux:description>Upload a cover image for your blog post (max 2MB)</flux:description>
+                <flux:description>Upload a cover image for your blog post (max 5MB)</flux:description>
                 
                 @if($featured_image)
                     <div class="relative mt-2 mb-4">
