@@ -17,10 +17,15 @@
             <flux:navlist.group :heading="__('Navigation')" class="grid">
                 <flux:navlist.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')"
                     wire:navigate>{{ __('Home') }}</flux:navlist.item>
-                
-                <flux:navlist.item icon="document-text" :href="route('dashboard.my-blogs.index')" 
+
+                <flux:navlist.item icon="document-text" :href="route('dashboard.my-blogs.index')"
                     :current="request()->routeIs('dashboard.my-blogs.*')" wire:navigate>
                     {{ __('My Blogs') }}
+                </flux:navlist.item>
+
+                <flux:navlist.item icon="command-line" :href="route('api-playground')"
+                    :current="request()->routeIs('api-playground')" wire:navigate>
+                    {{ __('API Playground') }}
                 </flux:navlist.item>
 
                 {{-- admin panel route --}}

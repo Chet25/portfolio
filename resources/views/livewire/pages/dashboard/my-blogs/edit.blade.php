@@ -21,7 +21,7 @@ new #[Layout('components.layouts.app')] class extends Component {
     #[Validate('nullable|image|max:2048')]
     public $featured_image;
 
-    public $existing_image;
+    public ?string $existing_image_url = null;
 
     #[Validate('nullable|string|max:500')]
     public string $excerpt = '';
@@ -36,30 +36,32 @@ new #[Layout('components.layouts.app')] class extends Component {
         $this->title = $blog->title;
         $this->content = $blog->content;
         $this->excerpt = $blog->excerpt ?? '';
-        $this->existing_image = $blog->featured_image;
+        $this->existing_image_url = $blog->getFirstMediaUrl('featured_image', 'medium');
     }
 
     public function removeExistingImage()
     {
-        $this->existing_image = null;
+        $this->blog->clearMediaCollection('featured_image');
+        $this->existing_image_url = null;
     }
 
     public function update($action = 'draft')
     {
         $this->validate();
 
-        $path = $this->existing_image;
-        if ($this->featured_image) {
-            $path = $this->featured_image->store('blogs', 'public');
-        }
-
         $this->blog->update([
             'title' => $this->title,
             'content' => $this->content,
             'excerpt' => $this->excerpt,
-            'featured_image' => $path,
             'review_status' => $action === 'submit' ? 'pending_review' : $this->blog->review_status,
         ]);
+
+        if ($this->featured_image) {
+            $this->blog->clearMediaCollection('featured_image');
+            $this->blog->addMedia($this->featured_image->getRealPath())
+                ->usingFileName($this->featured_image->getClientOriginalName())
+                ->toMediaCollection('featured_image');
+        }
 
         session()->flash('status', 'Blog updated successfully.');
 
@@ -120,9 +122,9 @@ new #[Layout('components.layouts.app')] class extends Component {
                             class="absolute top-2 right-2"
                         />
                     </div>
-                @elseif($existing_image)
+                @elseif($existing_image_url)
                     <div class="relative mt-2 mb-4">
-                        <img src="{{ asset('storage/' . $existing_image) }}" class="w-full h-48 object-cover rounded-lg">
+                        <img src="{{ $existing_image_url }}" class="w-full h-48 object-cover rounded-lg">
                         <flux:button 
                             type="button" 
                             wire:click="removeExistingImage" 

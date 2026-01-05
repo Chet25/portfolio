@@ -9,6 +9,8 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
+Volt::route('api-playground', 'pages.api-playground')->name('api-playground');
+
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
     ->name('dashboard');

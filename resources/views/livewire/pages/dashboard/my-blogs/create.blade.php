@@ -34,20 +34,20 @@ new #[Layout('components.layouts.app')] class extends Component {
             $slug .= '-' . ($count + 1);
         }
 
-        $path = null;
-        if ($this->featured_image) {
-            $path = $this->featured_image->store('blogs', 'public');
-        }
-
-        Auth::user()->blogs()->create([
+        $blog = Auth::user()->blogs()->create([
             'title' => $this->title,
             'slug' => $slug,
             'content' => $this->content,
             'excerpt' => $this->excerpt,
-            'featured_image' => $path,
             'status' => 'draft',
             'review_status' => $action === 'submit' ? 'pending_review' : 'pending_review',
         ]);
+
+        if ($this->featured_image) {
+            $blog->addMedia($this->featured_image->getRealPath())
+                ->usingFileName($this->featured_image->getClientOriginalName())
+                ->toMediaCollection('featured_image');
+        }
 
         return redirect()->route('dashboard.my-blogs.index');
     }

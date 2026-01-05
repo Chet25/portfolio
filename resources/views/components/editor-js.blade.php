@@ -5,6 +5,7 @@
 ])
 
 <div 
+    wire:ignore
     x-data="{
         editor: null,
         content: @entangle($attributes->wire('model')),
