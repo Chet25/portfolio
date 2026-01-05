@@ -57,6 +57,10 @@ class AdminPanelProvider extends PanelProvider
             ->plugins([
                 FilamentShieldPlugin::make(),
             ])
+            ->renderHook(
+                'panels::body.end',
+                fn (): string => \Illuminate\Support\Facades\Blade::render("@vite('resources/js/app.js')")
+            )
             ->authMiddleware([
                 Authenticate::class,
             ])

@@ -8,7 +8,7 @@ import InlineCode from '@editorjs/inline-code';
 import ImageTool from '@editorjs/image';
 import LinkTool from '@editorjs/link';
 
-window.initEditorJS = function (elementId, initialData, uploadUrl, linkFetchUrl) {
+window.initEditorJS = function (elementId, initialData, uploadUrl, linkFetchUrl, onChangeCallback) {
     let parsedData = {};
     
     if (initialData && initialData.trim() !== '') {
@@ -84,10 +84,14 @@ window.initEditorJS = function (elementId, initialData, uploadUrl, linkFetchUrl)
                 const outputData = await editor.save();
                 const jsonString = JSON.stringify(outputData);
                 
-                // Dispatch a custom event for Livewire to listen to
-                window.dispatchEvent(new CustomEvent('editor-content-updated', {
-                    detail: { content: jsonString }
-                }));
+                if (typeof onChangeCallback === 'function') {
+                    onChangeCallback(jsonString);
+                } else {
+                    // Dispatch a custom event for Livewire to listen to
+                    window.dispatchEvent(new CustomEvent('editor-content-updated', {
+                        detail: { content: jsonString }
+                    }));
+                }
             } catch (error) {
                 console.error('Editor.js save failed:', error);
             }
